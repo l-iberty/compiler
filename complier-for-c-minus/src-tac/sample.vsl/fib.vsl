@@ -1,0 +1,57 @@
+// A program to generate the first 12
+// Fibonacci numbers
+
+FUNC  main()
+{
+    VAR  k
+
+    k := 1
+
+    WHILE( 13 - k )
+    DO
+    {
+        PRINT  "fib( ", k, " ) = ", fib( k ), "\n"
+        k := k + 1
+    }
+    DONE
+}
+
+
+FUNC  fib( n )
+{
+    VAR  i		// Counter
+    VAR  a, b		// Last two Fibonacci numbers
+
+    // Special cases of n = 1
+
+    IF n - 1
+    THEN
+	CONTINUE
+    ELSE
+  	RETURN 1
+    FI
+
+    // Build up the Fibonacci number,
+    // starting from the second
+
+    i := 2
+    a := 1
+    b := 1
+
+    // Go round until we have computed
+    // the n'th Fibonacci number
+
+    WHILE n - i
+    DO
+    {
+	VAR  t		// Temp val
+
+	t := a		// Save old val
+        a := b		// Compute new vals
+        b := t + a
+        i := i + 1	// One more done
+    }
+    DONE
+
+    RETURN  b
+}

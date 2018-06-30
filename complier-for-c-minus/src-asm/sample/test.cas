@@ -1,0 +1,130 @@
+       int gi
+       
+L10:
+       function foo
+foo:
+       beginfunc
+       int_param a
+       int_param b
+       int_param c
+       int j
+       int i
+       i = 10
+       j = 50
+       int T0
+       T0 = i - j
+       a = T0
+       int T1
+       T1 = j - i
+       b = T1
+       int T2
+       T2 = 10 * b
+       int T3
+       T3 = i + T2
+       int T4
+       T4 = a - T3
+       c = T4
+       int T5
+       T5 = b * 4
+       int T6
+       T6 = a + T5
+       int T7
+       T7 = j / 2
+       int T8
+       T8 = T6 - T7
+       int T9
+       T9 = T8 - c
+       i = T9
+       gi = i
+       int T10
+       T10 = i < 200
+       return T10
+       endfunc
+       
+L11:
+       function bar
+bar:
+       beginfunc
+       int b
+       int a
+       int T12
+       int T11
+       T11 = a + b
+       arg T11
+       arg 30
+       arg 100
+       T12 = call L10
+       int T13
+       T13 = T12 + -20
+       return T13
+       endfunc
+       
+L14:
+       function fact
+fact:
+       beginfunc
+       int_param n
+       int T14
+       T14 = n == 0
+       ifz T14 goto L12
+       return 1
+       goto L13
+       
+L12:
+       int T16
+       int T15
+       T15 = n - 1
+       arg T15
+       T16 = call L14
+       int T17
+       T17 = n * T16
+       return T17
+       
+L13:
+       endfunc
+       
+L20:
+       function fib
+fib:
+       beginfunc
+       int_param n
+       int res
+       int prev2
+       int prev1
+       int i
+       int T18
+       T18 = n <= 0
+       ifz T18 goto L15
+       return 0
+       
+L15:
+       int T19
+       T19 = n <= 2
+       ifz T19 goto L18
+       return 1
+       goto L19
+       
+L18:
+       i = 1
+       prev1 = 1
+       prev2 = 1
+       
+L16:
+       int T20
+       T20 = i < n
+       ifz T20 goto L17
+       int T21
+       T21 = prev1 + prev2
+       res = T21
+       prev1 = prev2
+       prev2 = res
+       int T22
+       T22 = i + 1
+       i = T22
+       goto L16
+       
+L17:
+       
+L19:
+       return res
+       endfunc

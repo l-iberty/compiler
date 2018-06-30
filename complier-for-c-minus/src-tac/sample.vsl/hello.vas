@@ -1,0 +1,107 @@
+\
+\      Standard prolog
+\
+\      Modifications:
+\      ==============
+\
+\      26 Jan 96: Jeremy Bennett. Version for 2nd editon publication (unchanged
+\                 from first edition.
+\
+       LDA  L0,R1                        \ Set stack pointer
+       STI  R1,0(R1)                     \ Save on stack
+       LDA  L1,R3                        \ Return address for main routine
+\
+\        label L11
+L11:
+\        beginfunc
+       STI  R3,4(R1)
+\        arg L10
+       LDA  L10,R5
+       STI  R5,16(R1)
+\        call L4
+       LDA  L4,R2
+       STI  R1,8(R1)
+       LDA  8(R1),R1
+       BAL  R2,R3
+\        endfunc
+       LDI  4(R1),R2
+       LDI  0(R1),R1
+       BAL  R2,R3
+\      Library routines
+\
+\      Modifications:
+\      ==============
+\
+\      26 Jan 96: Jeremy Bennett. Version for 2nd editon publication (unchanged
+\                 from first edition.
+\
+\
+\      End of run routine
+\
+L1:
+       HALT
+\
+\      Print a number recursively
+\
+L2:
+       STI  R3,4(R1)                     \ Save the return address
+       LDI  8(R1),R15                    \ Copy arg to R15
+       LDA  10(R0),R5                    \ Constant 10
+       DIV  R15,R5                       \ Non-zero if more than one digit
+       BZE  L3                           \ Branch if only 1 digit
+\
+       STI  R5,12(R1)                    \ Save on stack for later
+       STI  R5,24(R1)                    \ Copy to new stack frame
+       LDA  L2,R2                        \ Address to call
+       STI  R1,16(R1)                    \ Save stack pointer
+       LDA  16(R1),R1                    \ Increment stack pointer
+       BAL  R2,R3                        \ Call recursively
+       LDA  10(R0),R15                   \ Constant 10 in R15
+       LDI  8(R1),R5                     \ Original number
+       LDI  12(R1),R6                    \ Divided number
+       MUL  R6,R15                       \ Multiply back by 10 in R15
+       SUB  R5,R15                       \ Subtract from original for digit
+L3:
+       LDA  48(R0),R5                    \ ASCII '0' in R5
+       ADD  R5,R15                       \ Add to get desired digit in R15
+       TRAP                              \ Print the digit
+       LDI  4(R1),R2                     \ Return address in R2
+       LDI  0(R1),R1                     \ Restore stack pointer
+       BAL  R2,R3                        \ Return
+\
+\      Print a string
+\
+L4:
+       STI  R3,4(R1)                     \ Save the return address
+       LDI  8(R1),R5                     \ String pointer in R5
+       LDA  16777216(R0),R7              \ 256 cubed for shifting 24 bits right
+L5:
+       LDI  0(R5),R6                     \ Next char in top byte  of R6
+       LDR  R7,R15                       \ Constant 256 cubed
+       DIV  R6,R15                       \ Char in R15
+       BZE  L6                           \ EOS branch to exit
+       TRAP                              \ Print the char
+       LDA  1(R5),R5                     \ Step to next char
+       BRA  L5                           \ Round again
+L6:
+       LDI  4(R1),R2                     \ Return address in R2
+       LDI  0(R1),R1                     \ Restore stack pointer
+       BAL  R2,R3                        \ Return
+\
+L10:
+       DB   72
+       DB   101
+       DB   108
+       DB   108
+       DB   111
+       DB   44
+       DB   32
+       DB   119
+       DB   111
+       DB   114
+       DB   108
+       DB   100
+       DB   33
+       DB   10
+       DB   0
+L0:

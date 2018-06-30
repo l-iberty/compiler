@@ -1,0 +1,15 @@
+       int gb
+       int ga
+       
+L10:
+       function foo
+foo:
+       beginfunc
+       int v
+       ga = 12
+       v = 10
+       int T0
+       T0 = ga + v
+       gb = T0
+       return gb
+       endfunc

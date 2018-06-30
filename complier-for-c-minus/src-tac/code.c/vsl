@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ $# -lt 1 ] ; then
+	echo usage: $0 prg.vsl
+	exit
+fi
+
+base=${1%%vsl}
+
+./vc $1
+./vas ${base}vas
+./vam ${base}vam

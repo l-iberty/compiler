@@ -1,0 +1,8 @@
+*.o
+vc
+vas
+vam
+disasm
+parser.[ch]
+scanner.[ch]
+.gdb_history

@@ -1,0 +1,11 @@
+// Show the register slave problem
+
+FUNC main()
+{
+    VAR  i
+
+    i := 3
+    i := - 4
+
+    PRINT  i, " ", i, "\n"
+}

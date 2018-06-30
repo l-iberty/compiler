@@ -1,0 +1,31 @@
+       int gj
+       int gi
+       int gjj
+       int gii
+       
+L10:
+       function foo
+foo:
+       beginfunc
+       int_param arg1
+       int_param arg2
+       int var2
+       int var1
+       int v
+       v = 10
+       return v
+       endfunc
+       
+L11:
+       function bar
+bar:
+       beginfunc
+       int_param x
+       int_param y
+       int var3
+       int var2
+       int var1
+       int v
+       v = 20
+       return v
+       endfunc

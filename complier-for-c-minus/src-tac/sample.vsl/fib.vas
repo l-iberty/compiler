@@ -1,0 +1,259 @@
+\
+\      Standard prolog
+\
+\      Modifications:
+\      ==============
+\
+\      26 Jan 96: Jeremy Bennett. Version for 2nd editon publication (unchanged
+\                 from first edition.
+\
+       LDA  L0,R1			 \ Set stack pointer
+       STI  R1,0(R1)			 \ Save on stack
+       LDA  L1,R3			 \ Return address for main routine
+\
+\        label L15
+L15:
+\        beginfunc
+       STI  R3,4(R1)
+\        var k
+\        k := 1
+       LDA  1(R0),R5
+\        label L13
+       STI  R5,8(R1)
+L13:
+\        var T0
+\        T0 := 13 - k
+       LDI  8(R1),R5
+       LDA  13(R0),R6
+       SUB  R6,R5
+\        ifz T0 goto L14
+       STI  R5,12(R1)
+       LDR  R5,R5
+       BZE  L14
+\        arg L10
+       LDA  L10,R7
+       STI  R7,24(R1)
+\        call L4
+       LDA  L4,R2
+       STI  R1,16(R1)
+       LDA  16(R1),R1
+       BAL  R2,R3
+\        arg k
+       LDI  8(R1),R5
+       STI  R5,24(R1)
+\        call L2
+       LDA  L2,R2
+       STI  R1,16(R1)
+       LDA  16(R1),R1
+       BAL  R2,R3
+\        arg L11
+       LDA  L11,R5
+       STI  R5,24(R1)
+\        call L4
+       LDA  L4,R2
+       STI  R1,16(R1)
+       LDA  16(R1),R1
+       BAL  R2,R3
+\        var T1
+\        arg k
+       LDI  8(R1),R5
+       STI  R5,28(R1)
+\        T1 = call L20
+       LDA  L20,R2
+       STI  R1,20(R1)
+       LDA  20(R1),R1
+       BAL  R2,R3
+\        arg T1
+       LDR  R4,R5
+       STI  R5,28(R1)
+\        call L2
+       STI  R5,16(R1)
+       LDA  L2,R2
+       STI  R1,20(R1)
+       LDA  20(R1),R1
+       BAL  R2,R3
+\        arg L12
+       LDA  L12,R5
+       STI  R5,28(R1)
+\        call L4
+       LDA  L4,R2
+       STI  R1,20(R1)
+       LDA  20(R1),R1
+       BAL  R2,R3
+\        var T2
+\        T2 := k + 1
+       LDA  1(R0),R5
+       LDI  8(R1),R6
+       ADD  R6,R5
+\        k := T2
+       STI  R5,20(R1)
+\        goto L13
+       STI  R5,8(R1)
+       BRA  L13
+\        label L14
+L14:
+\        endfunc
+       LDI  4(R1),R2
+       LDI  0(R1),R1
+       BAL  R2,R3
+\        label L20
+L20:
+\        beginfunc
+       STI  R3,4(R1)
+\        var n
+\        var i
+\        var b
+\        var a
+\        var T3
+\        T3 := n - 1
+       LDA  1(R0),R5
+       LDI  8(R1),R6
+       SUB  R6,R5
+\        ifz T3 goto L16
+       STI  R5,24(R1)
+       LDR  R5,R5
+       BZE  L16
+\        goto L17
+       BRA  L17
+\        label L16
+L16:
+\        return 1
+       LDA  1(R0),R4
+       LDI  4(R1),R2
+       LDI  0(R1),R1
+       BAL  R2,R3
+\        label L17
+L17:
+\        i := 2
+       LDA  2(R0),R5
+\        a := 1
+       LDA  1(R0),R6
+\        b := 1
+       LDA  1(R0),R7
+\        label L18
+       STI  R5,12(R1)
+       STI  R6,20(R1)
+       STI  R7,16(R1)
+L18:
+\        var T4
+\        T4 := n - i
+       LDI  12(R1),R5
+       LDI  8(R1),R6
+       SUB  R6,R5
+\        ifz T4 goto L19
+       STI  R5,28(R1)
+       LDR  R5,R5
+       BZE  L19
+\        var t
+\        t := a
+       LDI  20(R1),R7
+\        a := b
+       LDI  16(R1),R8
+\        var T5
+\        T5 := t + a
+       STI  R8,20(R1)
+       ADD  R7,R8
+\        b := T5
+       STI  R8,36(R1)
+\        var T6
+\        T6 := i + 1
+       LDA  1(R0),R9
+       LDI  12(R1),R10
+       ADD  R10,R9
+\        i := T6
+       STI  R9,40(R1)
+\        goto L18
+       STI  R7,32(R1)
+       STI  R8,16(R1)
+       STI  R9,12(R1)
+       BRA  L18
+\        label L19
+L19:
+\        return b
+       LDI  16(R1),R4
+       LDI  4(R1),R2
+       LDI  0(R1),R1
+       BAL  R2,R3
+\        endfunc
+       LDI  4(R1),R2
+       LDI  0(R1),R1
+       BAL  R2,R3
+\      Library routines
+\
+\      Modifications:
+\      ==============
+\
+\      26 Jan 96: Jeremy Bennett. Version for 2nd editon publication (unchanged
+\                 from first edition.
+\
+\
+\      End of run routine
+\
+L1:
+       HALT
+\
+\      Print a number recursively
+\
+L2:
+       STI  R3,4(R1)			 \ Save the return address
+       LDI  8(R1),R15			 \ Copy arg to R15
+       LDA  10(R0),R5			 \ Constant 10
+       DIV  R15,R5                       \ Non-zero if more than one digit
+       BZE  L3				 \ Branch if only 1 digit
+\
+       STI  R5,12(R1)			 \ Save on stack for later
+       STI  R5,24(R1)			 \ Copy to new stack frame
+       LDA  L2,R2			 \ Address to call
+       STI  R1,16(R1)			 \ Save stack pointer
+       LDA  16(R1),R1			 \ Increment stack pointer
+       BAL  R2,R3			 \ Call recursively
+       LDA  10(R0),R15			 \ Constant 10 in R15
+       LDI  8(R1),R5			 \ Original number
+       LDI  12(R1),R6			 \ Divided number
+       MUL  R6,R15			 \ Multiply back by 10 in R15
+       SUB  R5,R15			 \ Subtract from original for digit
+L3:
+       LDA  48(R0),R5			 \ ASCII '0' in R5
+       ADD  R5,R15			 \ Add to get desired digit in R15
+       TRAP				 \ Print the digit
+       LDI  4(R1),R2			 \ Return address in R2
+       LDI  0(R1),R1			 \ Restore stack pointer
+       BAL  R2,R3			 \ Return
+\
+\      Print a string
+\
+L4:
+       STI  R3,4(R1)			 \ Save the return address
+       LDI  8(R1),R5			 \ String pointer in R5
+       LDA  16777216(R0),R7		 \ 256 cubed for shifting 24 bits right
+L5:
+       LDI  0(R5),R6			 \ Next char in top byte  of R6
+       LDR  R7,R15			 \ Constant 256 cubed
+       DIV  R6,R15			 \ Char in R15
+       BZE  L6				 \ EOS branch to exit
+       TRAP				 \ Print the char
+       LDA  1(R5),R5			 \ Step to next char
+       BRA  L5				 \ Round again
+L6:
+       LDI  4(R1),R2			 \ Return address in R2
+       LDI  0(R1),R1			 \ Restore stack pointer
+       BAL  R2,R3			 \ Return
+\
+L11:
+       DB   32
+       DB   41
+       DB   32
+       DB   61
+       DB   32
+       DB   0
+L12:
+       DB   10
+       DB   0
+L10:
+       DB   102
+       DB   105
+       DB   98
+       DB   40
+       DB   32
+       DB   0
+L0:
