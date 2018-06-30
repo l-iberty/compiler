@@ -20,6 +20,7 @@ TAC*	do_assign(SYMB* var, ENODE* expr);
 TAC*    do_if(ENODE* expr, TAC* stmt);
 TAC*    do_if_else(ENODE* expr, TAC* stmt1, TAC* stmt2);
 TAC*	do_while(ENODE* expr, TAC* stmt);
+TAC*	do_for(TAC* init, TAC* cond, TAC* update, TAC* stmt);
 TAC*	do_func(TAC* func_begin, TAC* param_list, TAC* stmt);
 TAC*	do_func_begin(SYMB* func);
 TAC*	do_return(ENODE *expr);
@@ -62,6 +63,9 @@ extern char *yytext;
 %type <tac>	assign_stmt
 %type <tac>	if_stmt
 %type <tac>	while_stmt
+%type <tac>	expr_stmt
+%type <tac>	assign_code
+%type <tac>	for_stmt
 %type <tac>	return_stmt
 %type <tac>	call_stmt
 %type <tac>	block
@@ -79,6 +83,7 @@ extern char *yytext;
 %token		IF
 %token		ELSE
 %token		WHILE
+%token		FOR
 %token		RETURN
 %token <symb>	IDENTIFIER
 %token <symb>	NUMBER
@@ -162,6 +167,7 @@ param_item	:	variable
 stmt		:	assign_stmt
 		|	if_stmt
 		|	while_stmt
+		|	for_stmt
 		|	return_stmt
 		|	call_stmt
 		|	block
@@ -240,6 +246,29 @@ while_stmt	:	WHILE '(' expr ')' stmt
 			}
 		;
 		
+expr_stmt	:	';'
+			{
+				$$ = NULL;
+			}
+		|	expr ';'
+			{
+				$$ = $1->code;
+			}
+		;
+		
+assign_code	:	variable '=' expr
+			{
+				$$ = do_assign( $1, $3 );
+			}
+		;
+		
+for_stmt	:	FOR '(' assign_stmt expr_stmt assign_code ')' stmt
+			{
+				// eg. for(i=0;i<10;i=i+1) stmt
+				$$ = do_for( $3, $4, $5, $7 );
+			}
+		;
+		
 return_stmt	:	RETURN expr ';'
 			{
 				$$ = do_return( $2 );
@@ -296,7 +325,6 @@ expr		:	expr '+' expr
 			{
 				$$ = do_uminus( $2 );
 			}
-
 		|	rela_g_expr
 		|	rela_ge_expr
 		|	rela_l_expr
@@ -645,6 +673,50 @@ TAC* do_while(ENODE* expr, TAC* stmt)
 	tac = join_tac(tac,  false_branch);
 	
 	free(expr);
+	
+	return tac;
+}
+
+
+TAC* do_for(TAC* init, TAC* cond, TAC* update, TAC* stmt)
+/**
+ *	    init
+ *	test:
+ *	    ifnz cond->VA goto true_branch	( tac_true  )
+ *	    goto false_branch			( tac_false )
+ *	true_branch:
+ *	    stmt
+ *	    update
+ *	    goto test				( tac_loop )
+ *	false_branch:
+ *
+ */
+{
+	TAC *tac;
+	TAC *test;
+	TAC *tac_true;
+	TAC *tac_false;
+	TAC *true_branch;
+	TAC *false_branch;
+	TAC *tac_loop;
+	
+	test         = mktac(TAC_LABEL, mklabel(), NULL, NULL);
+	true_branch  = mktac(TAC_LABEL, mklabel(), NULL, NULL);
+        false_branch = mktac(TAC_LABEL, mklabel(), NULL, NULL);
+        
+	tac_true  = mktac(TAC_IFNZ, cond->VA, true_branch->VA, NULL);
+	tac_false = mktac(TAC_GOTO, false_branch->VA, NULL, NULL);
+	tac_loop  = mktac(TAC_GOTO, test->VA,         NULL, NULL);
+	
+	tac = join_tac(init, test);
+	tac = join_tac(tac,  cond);
+	tac = join_tac(tac,  tac_true);
+	tac = join_tac(tac,  tac_false);
+	tac = join_tac(tac,  true_branch);
+	tac = join_tac(tac,  stmt);
+	tac = join_tac(tac,  update);
+	tac = join_tac(tac,  tac_loop);
+	tac = join_tac(tac,  false_branch);
 	
 	return tac;
 }

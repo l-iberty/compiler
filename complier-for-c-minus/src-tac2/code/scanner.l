@@ -27,6 +27,7 @@ int		{ return INT;		}
 if              { return IF;       	}
 else            { return ELSE;     	}
 while           { return WHILE;    	}
+for		{ return FOR;		}
 return		{ return RETURN;	}
 ">="		{ return GREATER_EQUAL; }
 "<="		{ return LESS_EQUAL;	}

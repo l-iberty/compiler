@@ -13,3 +13,10 @@
 `test`和`test2`的执行结果一致，说明测试通过:
 
 ![](screenshot/test.png)
+
+## 测试基本的`for`循环
+测试文件：[test-for](test-for/)
+
+测试结果：
+
+![](screenshot/test-for.png)
