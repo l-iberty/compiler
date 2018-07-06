@@ -104,7 +104,7 @@ SYMB*	get_symb(char *text);
 void	print_symbs();
 void	free_symbs();
 char*	ts(SYMB* symb);
-char*   int2str(int i);
+char*   int2str(int i, char* str);
 void	init_tac();
 void	cleanup_tac();
 void	setup_files(char *ifile);

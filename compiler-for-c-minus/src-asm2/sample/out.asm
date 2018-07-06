@@ -89,7 +89,7 @@ bar:
 	mov ebp, esp
 	sub esp, 0x00000028
 	mov eax, 0x00000004
-	imul eax, 0x00000005
+	imul eax, 0x00000004
 	mov [ebp + 0xFFFFFFF4], eax
 	mov eax, [ebp + 0xFFFFFFF4]
 	add eax, 0x0000000A

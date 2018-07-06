@@ -122,23 +122,22 @@ void free_symbs()
 	}
 }
 
-char* int2str(int i)
+char* int2str(int i, char* str)
 {
-        char* s;
+        sprintf(str, "%d", i);
         
-        s = (char*) malloc(16);
-        sprintf(s, "%d", i);
-        
-        return s;
+        return str;
 }
 
 char* ts(SYMB* symb)
 {
+	char str[16];
+	
 	switch (symb->type)
 	{
 		case T_NUM:
 		case T_LABEL:
-			return int2str(symb->VAL);
+			return int2str(symb->VAL, str);
 		case T_VAR:
 		case T_FUNC:
 			return symb->TEXT;

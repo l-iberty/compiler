@@ -47,7 +47,7 @@ bar:
 	int b
 	arg 100
 	int T12
-	T12 = 4 * 5
+	T12 = 4 * 4
 	int T13
 	T13 = 10 + T12
 	arg T13
